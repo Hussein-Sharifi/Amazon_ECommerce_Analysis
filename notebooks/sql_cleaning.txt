@@ -1,0 +1,682 @@
+
+-- create table and import csv file
+CREATE TABLE amazon_orders (
+    index_id                        SERIAL PRIMARY KEY,
+    order_id                        TEXT NOT NULL,
+    date                            TIMESTAMP NOT NULL,
+    status                          TEXT NOT NULL,
+    fulfillment                     TEXT NOT NULL,
+    sales_channel                   TEXT NOT NULL,
+    ship_service_level              TEXT NOT NULL,
+    style                           TEXT NOT NULL,
+    sku                             TEXT NOT NULL,
+    category                        TEXT NOT NULL,
+    size                            TEXT NOT NULL,
+    asin                            TEXT NOT NULL,
+    quantity                        INT NOT NULL,
+    currency                        TEXT,
+    amount                          FLOAT,
+    ship_city                       TEXT NOT NULL,
+    ship_state_or_territory         TEXT NOT NULL,
+    ship_postal_code                TEXT NOT NULL,
+    ship_country                    TEXT NOT NULL,
+    promotion_ids                   BOOLEAN NOT NULL,
+    b2b                             BOOLEAN NOT NULL
+);
+
+
+\copy amazon_orders FROM 'data\amazon_sales_cleaned_20250327_154950.csv"' DELIMITER ',' CSV HEADER;
+
+
+-- determine if payment information can be recovered. start with quantity.
+-- already know quantity is not null. check if any orders are missing both quantity and amount information:
+SELECT index_id, asin, quantity, amount, style, category, sales_channel FROM amazon_orders WHERE (quantity = 0 AND amount = 0) LIMIT 10;
+
+ index_id | asin | quantity | amount | style | category | sales_channel
+----------+------+----------+--------+-------+----------+---------------
+(0 rows)
+
+SELECT index_id, asin, quantity, amount, style, category, sales_channel FROM amazon_orders WHERE (quantity = 0 AND amount IS NULL) LIMIT 10;
+
+ index_id |    asin    | quantity | amount |  style   | category | sales_channel
+----------+------------+----------+--------+----------+----------+---------------
+        8 | B08L91ZZXN |        0 |        | SET200   | set      | amazon.in
+       29 | B07JG3CND8 |        0 |        | JNE2132  | kurta    | amazon.in
+       65 | B082W8RWN1 |        0 |        | JNE3373  | kurta    | amazon.in
+       84 | B08WPR5MCB |        0 |        | JNE3510  | kurta    | amazon.in
+       95 | B081WSCKPQ |        0 |        | JNE3405  | kurta    | amazon.in
+      101 | B09RKDJ9SQ |        0 |        | SET347   | set      | amazon.in
+      132 | B0983FSRFS |        0 |        | SET269   | set      | amazon.in
+      139 | B099S7RDLZ |        0 |        | J0300    | top      | amazon.in
+      155 | B09TZVXQ1J |        0 |        | JNE3887  | kurta    | amazon.in
+      165 | B09LD3PMBT |        0 |        | PJNE2100 | kurta    | amazon.in
+(10 rows)
+
+
+-- no entries with amount = 0 and quantity = 0, but some entries have quantity = 0 and amount = null. 
+
+-- let's check whether quantity is factored into order amount
+SELECT t1.asin, t1.quantity as q1, t1.amount as a1, 
+                t2.quantity as q2, t2.amount as a2
+FROM amazon_orders t1 JOIN amazon_orders t2 ON t1.asin = t2.asin
+WHERE t1.amount > 0 AND t2.amount > 0
+    AND t1.quantity > 0 AND t2.quantity > t1.quantity 
+LIMIT 10;
+
+
+    asin    | q1 |  a1  | q2 |  a2
+------------+----+------+----+------
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+ B0894WT71H |  1 | 1065 |  2 | 2130
+(10 rows)
+
+
+-- quantity consistently factored into amount. Let's check items with high pricing variance
+SELECT 
+    asin, 
+    MIN(amount/quantity),
+    PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY amount/quantity) AS median_unit_price, 
+    AVG(amount/quantity) AS mean, 
+    MAX(amount/quantity),
+    (MAX(amount/quantity) - MIN(amount/quantity)) AS max_price_diff
+FROM amazon_orders
+WHERE quantity > 0 AND amount > 0
+GROUP BY asin
+ORDER BY max_price_diff DESC
+LIMIT 20;
+
+    asin    | min  | median_unit_price |        mean        | max  | max_price_diff
+------------+------+-------------------+--------------------+------+----------------
+ B09268MDVS | 1671 |              2598 |             2352.8 | 2598 |            927
+ B0926TKJ7B | 1671 |              2520 |            2327.25 | 2598 |            927
+ B09YNXDH8B | 1315 |              1399 |               1405 | 1999 |            684
+ B09YNY91G5 | 1315 |              1399 |            1426.84 | 1999 |            684
+ B09Y32KY4Q | 1315 |              1399 |             1467.8 | 1999 |            684
+ B09268QCDQ | 1671 |              1985 |               1985 | 2299 |            628
+ B0982ZB89B |  807 |               989 |  944.5454545454545 | 1362 |            555
+ B09PDT48PM | 1078 |              1078 |             1278.8 | 1629 |            551
+ B09PDFD6XJ | 1078 |              1629 | 1520.8333333333333 | 1629 |            551
+ B09PCZGK6J | 1078 |              1078 | 1261.6666666666667 | 1629 |            551
+ B08B3YNJG5 | 1159 |              1603 |  1497.774193548387 | 1695 |            536
+ B09X1TJ4BX | 1199 |              1199 | 1287.3333333333333 | 1729 |            530
+ B09X1V55VZ | 1199 |              1729 | 1552.3333333333333 | 1729 |            530
+ B09X1VTR39 | 1199 |              1199 |             1331.5 | 1729 |            530
+ B0894YHVKG | 1127 |              1559 | 1460.6666666666667 | 1648 |            521
+ B0894XW4QF | 1127 |              1648 |          1465.0625 | 1648 |            521
+ B0926861CR |  939 |               999 | 1062.6521739130435 | 1449 |            510
+ B08PVV8HQK |  939 |               999 | 1054.7142857142858 | 1449 |            510
+ B09263P7N6 |  939 |               999 | 1042.3333333333333 | 1449 |            510
+ B0926WJQBY |  939 |               999 |               1080 | 1449 |            510
+(20 rows)
+
+
+-- looks good, this is acceptable price range considering currency is rupee. let's double check top two. 
+-- I expect both items are sets, which are expected to have discounts and therefore high price variance.
+SELECT index_id, asin, category, date, quantity, amount
+FROM amazon_orders
+WHERE (asin = 'B09268MDVS') OR (asin =  'B0926TKJ7B')
+ORDER BY asin;
+
+ index_id |    asin    | category |        date         | quantity | amount
+----------+------------+----------+---------------------+----------+--------
+    34407 | B09268MDVS | set      | 2022-04-10 00:00:00 |        1 |   1671
+    47169 | B09268MDVS | set      | 2022-04-02 00:00:00 |        1 |      0
+    67764 | B09268MDVS | set      | 2022-05-16 00:00:00 |        1 |   2598
+    85770 | B09268MDVS | set      | 2022-05-03 00:00:00 |        1 |   2299
+   112946 | B09268MDVS | set      | 2022-06-11 00:00:00 |        1 |   2598
+   114176 | B09268MDVS | set      | 2022-06-11 00:00:00 |        1 |   2598
+    39842 | B0926TKJ7B | set      | 2022-04-06 00:00:00 |        1 |   1671
+    73378 | B0926TKJ7B | set      | 2022-05-12 00:00:00 |        0 |
+    56307 | B0926TKJ7B | set      | 2022-05-26 00:00:00 |        1 |   2598
+    77634 | B0926TKJ7B | set      | 2022-05-08 00:00:00 |        1 |   2442
+    69527 | B0926TKJ7B | set      | 2022-05-15 00:00:00 |        1 |   2598
+(11 rows)
+
+
+-- checks out. now create unit_price spreadsheet
+CREATE TABLE unit_price AS
+    SELECT asin,
+     mode() WITHIN GROUP (ORDER BY amount/quantity) as mode
+    FROM amazon_orders
+WHERE quantity >= 1 AND amount > 0
+GROUP BY asin
+ORDER BY asin;
+
+-- make sure unit price distribution is coherent
+SELECT 
+    width_bucket(mode, 
+        (SELECT MIN(mode) FROM unit_price),
+        (SELECT MAX(mode) FROM unit_price),
+        10) as bucket,
+    COUNT(*) as count,
+    MIN(mode) as min_price,
+    MAX(mode) as max_price
+FROM unit_price
+GROUP BY bucket
+ORDER BY bucket;
+
+ bucket | count | min_price | max_price
+--------+-------+-----------+-----------
+      1 |  2081 |       199 |       438
+      2 |  2779 |       440 |       678
+      3 |  1365 |       680 |       916
+      4 |   539 |       919 |      1158
+      5 |   239 |      1163 |      1398
+      6 |    86 |      1399 |      1629
+      7 |    16 |      1648 |      1729
+     10 |     1 |      2442 |      2442
+     11 |     3 |      2598 |      2598
+(9 rows)
+
+-- looks good. let's recover payment info. first replace missing
+-- quantity info using amount/unit_price. if amount is null, assume
+-- quantity is 1 (vast majority of orders have quantity 1, as we saw
+-- in pandas cleaning)
+UPDATE amazon_orders ao
+SET quantity = CASE
+    WHEN
+        ao.quantity = 0 
+        AND ao.amount IS NOT NULL
+    THEN ROUND(ao.amount/up.mode)
+    WHEN 
+        ao.quantity = 0 
+        AND ao.amount IS NULL 
+        THEN 1
+    ELSE ao.quantity
+END
+FROM unit_price up
+WHERE ao.asin = up.asin;
+
+-- Let's update remaining orders with amount information but that
+-- don't exist in our unit price spreadsheet
+UPDATE amazon_orders ao
+SET quantity = 1
+WHERE quantity = 0 AND amount IS NOT NULL;
+
+-- we are left with 38 entries for which we have no payment info and 
+-- no unit price information from other orders. 
+SELECT COUNT(*) FROM amazon_orders WHERE quantity = 0;
+ count
+-------
+    38
+(1 row)
+
+-- let's drop those entries
+WITH no_payment_info AS (
+    SELECT index_id 
+    FROM amazon_orders
+    WHERE quantity=0
+    )
+DELETE FROM amazon_orders WHERE index_id IN (SELECT index_id FROM no_payment_info);
+
+-- deleted 38 entries. let's make sure quantity distribution is coherent after update
+SELECT 
+    width_bucket(quantity, 
+        (SELECT MIN(quantity) FROM amazon_orders),
+        (SELECT MAX(quantity) FROM amazon_orders),
+        10) as bucket,
+    COUNT(*) as count,
+    MIN(quantity) as min_quantity,
+    MAX(quantity) as max_quantity
+FROM amazon_orders
+GROUP BY bucket
+ORDER BY bucket;
+
+ bucket | count  | min_quantity | max_quantity
+--------+--------+--------------+--------------
+      1 | 128879 |            1 |            2
+      2 |     35 |            3 |            3
+      3 |     12 |            4 |            5
+      6 |      2 |            8 |            9
+      9 |      1 |           13 |           13
+     11 |      1 |           15 |           15
+(6 rows)
+
+
+-- let's check quantity outliers
+SELECT quantity, amount, style, asin, ship_city, 
+       ship_postal_code, b2b, promotion_ids sales_channel 
+FROM amazon_orders where quantity >6;
+
+ quantity | amount |  style  |    asin    | ship_city | ship_postal_code | b2b | sales_channel
+----------+--------+---------+------------+-----------+------------------+-----+---------------
+       15 |        | BL017   | B077Z7WDXN | surat     | 394210           | f   | f
+        9 |        | JNE2305 | B07GRSCXCP | surat     | 394210           | f   | f
+       13 |        | JNE2305 | B07GRRLW2H | surat     | 394210           | f   | f
+        8 |   5584 | SET268  | B08XQBXFPP | guntur    | 522007           | f   | f
+(4 rows)
+
+-- looks good. now that quantity info is recovered, let's recover amount
+UPDATE amazon_orders ao
+SET 
+    amount = CASE
+        WHEN (ao.amount = 0 OR ao.amount IS NULL) THEN (up.mode * ao.quantity)
+        ELSE ao.amount
+END
+FROM unit_price up
+WHERE ao.asin = up.asin;
+
+-- we are left with 30 orders with no unit_price information. let's make sure
+-- we have no unit price info for these orders
+WITH no_amount_info AS (
+    SELECT asin FROM amazon_orders WHERE amount = 0 OR amount IS NULL )
+SELECT up.asin FROM unit_price up JOIN no_amount_info no ON up.asin=no.asin;
+
+ asin
+------
+(0 rows)
+
+
+-- checks out. let's drop these entries
+DELETE FROM amazon_orders WHERE amount=0 OR amount IS NULL;
+
+-- check updated amount distribution
+SELECT 
+    width_bucket(amount, 
+        (SELECT MIN(amount) FROM amazon_orders),
+        (SELECT MAX(amount) FROM amazon_orders),
+        10) as bucket,
+    COUNT(*) as count,
+    MIN(amount) as min_amount,
+    MAX(amount) as max_amount
+FROM amazon_orders
+GROUP BY bucket
+ORDER BY bucket;
+
+ bucket | count | min_amount | max_amount
+--------+-------+------------+------------
+      1 | 88549 |        199 |        747
+      2 | 36435 |     747.62 |       1296
+      3 |  3837 |       1297 |       1836
+      4 |    51 |       1893 |    2389.28
+      5 |    20 |       2397 |       2894
+      6 |     3 |       3036 |       3246
+      8 |     1 |    4235.72 |    4235.72
+      9 |     1 |       4641 |       4641
+     10 |     2 |       5495 |       5584
+     11 |     1 |       5685 |       5685
+(10 rows)
+
+
+-- looks good. let's double check outliers
+SELECT quantity, amount, style, asin, ship_city, 
+       ship_postal_code, b2b, promotion_ids, sales_channel 
+FROM amazon_orders WHERE amount > 3246;
+
+ quantity | amount  |  style  |    asin    | ship_city | ship_postal_code | b2b | promotion_ids | sales_channel
+----------+---------+---------+------------+-----------+------------------+-----+---------------+---------------
+       15 |    5685 | BL017   | B077Z7WDXN | surat     | 394210           | f   | f             | non-amazon
+       13 |    4641 | JNE2305 | B07GRRLW2H | surat     | 394210           | f   | f             | non-amazon
+        5 |    5495 | J0013   | B08CN3P4HX | jalandhar | 144022           | t   | t             | amazon.in
+        4 | 4235.72 | SET397  | B09RKD6KWL | jaipur    | 302012           | f   | f             | amazon.in
+        8 |    5584 | SET268  | B08XQBXFPP | guntur    | 522007           | f   | f             | amazon.in
+(5 rows)
+
+-- payment recovery complete. Let's see how many entries we're left with
+SELECT count(*) as total_rows FROM amazon_orders;
+
+ total_rows
+------------
+     128900
+(1 row)
+
+
+-- nicely even number! we kept 128900 out of 128974 orders. 
+-- recovered payment info of 15,196 out of 15,270 orders. 
+
+-- now let's recover currency info. 
+-- if currency is consistently INR, the amount distribution should be similar
+SELECT 
+    width_bucket(amount, 
+        (SELECT MIN(amount) FROM amazon_orders),
+        (SELECT MAX(amount) FROM amazon_orders),
+        10) as bucket,
+    COUNT(*) as count,
+    MIN(amount) as min_amount,
+    MAX(amount) as max_amount
+FROM amazon_orders
+WHERE currency IS NULL
+GROUP BY bucket
+ORDER BY bucket;
+
+ bucket | count | min_amount | max_amount
+--------+-------+------------+------------
+      1 |  5411 |        229 |        747
+      2 |  2104 |        749 |       1284
+      3 |   223 |       1297 |       1728
+      5 |     2 |       2598 |       2676
+      6 |     2 |       3213 |       3246
+      9 |     1 |       4641 |       4641
+     11 |     1 |       5685 |       5685
+(7 rows)
+
+-- looks good. let's fill in INR
+UPDATE amazon_orders
+    SET currency = 'INR'
+WHERE currency IS NULL;
+
+-- let's fix incorrectly labeled ship cities. we will
+-- do this by creating a standardized location spreadsheet
+CREATE TABLE standard_city AS (
+    SELECT 
+        ship_state_or_territory,
+        ship_postal_code,
+        mode() WITHIN GROUP (ORDER BY ship_city) AS standard_city,
+        COUNT(*) as location_count
+    FROM amazon_orders
+    GROUP BY
+        ship_state_or_territory,
+        ship_postal_code
+);
+
+SELECT * FROM standard_city ORDER BY location_count DESC LIMIT 10;
+
+ ship_state_or_territory | ship_postal_code | standard_city | location_count
+-------------------------+------------------+---------------+----------------
+ uttar pradesh           | 201301           | noida         |           1006
+ haryana                 | 122001           | gurugram      |            688
+ karnataka               | 560037           | bengaluru     |            632
+ karnataka               | 560068           | bengaluru     |            619
+ karnataka               | 560076           | bengaluru     |            581
+ karnataka               | 560043           | bengaluru     |            499
+ maharashtra             | 401107           | thane         |            493
+ karnataka               | 560100           | bengaluru     |            489
+ telangana               | 500072           | hyderabad     |            488
+ karnataka               | 560066           | bengaluru     |            464
+(10 rows)
+
+-- update ship_city
+UPDATE amazon_orders ao
+    SET ship_city = sc.standard_city
+    FROM standard_city sc
+    WHERE 
+        ao.ship_postal_code = sc.ship_postal_code AND
+        ao.ship_state_or_territory = sc.ship_state_or_territory;
+
+-- confirm for cities with > 4 orders
+SELECT ship_city, COUNT(*) 
+    FROM amazon_orders 
+    GROUP BY ship_city 
+    HAVING count(*) > 4 
+    ORDER BY count(*)
+    LIMIT 10;
+
+        ship_city        | count
+-------------------------+-------
+ chandrugonda            |     5
+ veerapandianpattinam    |     5
+ kiratpur                |     5
+ redhakhol               |     5
+ kheda                   |     5
+ azhiyur                 |     5
+ barshi                  |     5
+ koil palayam            |     5
+ bokaro thermal township |     5
+ bijpur                  |     5
+(10 rows)
+
+-- looks good. can further refine this using prediction algorithms
+-- or a standardized dictionary for indian cities with fuzzy string matching.
+
+-- now for feature engineering
+-- 1: sale analysis by item.
+CREATE VIEW total_item_sales AS 
+    SELECT 
+        asin,
+        MODE() WITHIN GROUP (ORDER BY category) as category,
+        COUNT(*) as total_orders,
+        SUM(CASE WHEN promotion_ids = TRUE THEN quantity ELSE 0 END) as orders_at_discount,
+        SUM(quantity) as units_sold,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY amount/quantity) as median_unit_price,
+        ROUND(SUM(amount)) as revenue
+    FROM amazon_orders
+    WHERE status != 'cancelled or returned'
+    GROUP BY asin
+    ORDER BY units_sold DESC;
+
+SELECT * FROM total_item_sales LIMIT 20;
+
+    asin    |   category    | total_orders | orders_at_discount | units_sold | median_unit_price | revenue
+------------+---------------+--------------+--------------------+------------+-------------------+---------
+ B09SDXFFQ1 | western dress |          604 |                588 |        605 |               735 |  449852
+ B09SDY8DCT | western dress |          510 |                504 |        515 |               735 |  384455
+ B09SDYQ3WG | western dress |          462 |                450 |        463 |               735 |  346542
+ B081WSCKPQ | kurta         |          442 |                234 |        445 |               399 |  181141
+ B08XNJG8B1 | set           |          431 |                351 |        432 |              1112 |  496430
+ B08XNJ19QH | set           |          389 |                282 |        390 |              1112 |  442704
+ B081WX4G4Q | kurta         |          372 |                240 |        375 |               399 |  154673
+ B09SDXRYBG | western dress |          371 |                353 |        372 |               771 |  280261
+ B09SDY9SQ6 | western dress |          344 |                320 |        348 |               735 |  259793
+ B08XQBF1G4 | set           |          341 |                173 |        342 |               788 |  264096
+ B09SDXSQ33 | western dress |          336 |                314 |        336 |               735 |  248733
+ B09SDY4VDC | western dress |          328 |                311 |        329 |               735 |  244942
+ B08XQ8MCKP | set           |          325 |                173 |        326 |               788 |  250588
+ B08XQ98B2Q | set           |          316 |                175 |        318 |               788 |  245634
+ B081WVMMCY | kurta         |          317 |                235 |        318 |               399 |  130496
+ B08B3Z2YY3 | set           |          270 |                270 |        270 |               759 |  204147
+ B08KRXV1QR | kurta         |          267 |                168 |        267 |               399 |  106743
+ B0894X27FC | set           |          258 |                227 |        258 |             659.5 |  172318
+ B08XNDL1DL | set           |          249 |                176 |        250 |              1146 |  289808
+ B082W7MZVQ | kurta         |          248 |                135 |        248 |               376 |   93878
+(20 rows)
+
+CREATE VIEW cancelled_total_item_sales AS 
+    SELECT 
+        asin,
+        MODE() WITHIN GROUP (ORDER BY category) as category,
+        COUNT(*) as total_orders,
+        SUM(CASE WHEN promotion_ids = TRUE THEN quantity ELSE 0 END) as orders_at_discount,
+        SUM(quantity) as units_sold,
+        PERCENTILE_CONT(0.5) WITHIN GROUP (ORDER BY amount/quantity) as median_unit_price,
+        ROUND(SUM(amount)) as missed_revenue
+    FROM amazon_orders
+    WHERE status = 'cancelled or returned'
+    GROUP BY asin
+    ORDER BY units_sold DESC;
+
+SELECT * FROM cancelled_total_item_sales LIMIT 20;
+
+    asin    |   category    | total_orders | orders_at_discount | units_sold | median_unit_price | missed_revenue
+------------+---------------+--------------+--------------------+------------+-------------------+----------------
+ B09SDXFFQ1 | western dress |          169 |                 43 |        169 |               735 |         123240
+ B09SDY8DCT | western dress |          147 |                 37 |        147 |               735 |         106585
+ B09SDYQ3WG | western dress |          125 |                 27 |        125 |               735 |          91631
+ B09SDXRYBG | western dress |          103 |                 35 |        104 |               735 |          77337
+ B081WSCKPQ | kurta         |           93 |                  2 |         94 |               399 |          37843
+ B09SDY9SQ6 | western dress |           87 |                 26 |         87 |               735 |          63669
+ B081WVMMCY | kurta         |           77 |                 15 |         77 |               399 |          30494
+ B0894X27FC | set           |           76 |                 10 |         76 |               654 |          49538
+ B08XNJG8B1 | set           |           75 |                  4 |         76 |              1112 |          85706
+ B0894XH3LN | set           |           73 |                 20 |         73 |               654 |          47375
+ B08B3Z2YY3 | set           |           73 |                 19 |         73 |            722.86 |          53615
+ B081WX4G4Q | kurta         |           71 |                  7 |         71 |               399 |          28303
+ B08XQ98B2Q | set           |           71 |                  3 |         71 |               788 |          55280
+ B09NQ4NM75 | set           |           66 |                 12 |         67 |               597 |          40477
+ B08XNJ19QH | set           |           63 |                 11 |         64 |              1112 |          70593
+ B099NR7612 | western dress |           62 |                  8 |         62 |               744 |          51173
+ B0894WW15B | set           |           60 |                  5 |         60 |               664 |          39126
+ B09SDXSQ33 | western dress |           59 |                 15 |         59 |            734.29 |          42669
+ B09SDY4VDC | western dress |           58 |                 11 |         58 |               735 |          42459
+ B0894XKVH3 | set           |           55 |                 14 |         55 |               654 |          35952
+(20 rows)
+
+
+CREATE VIEW regional_item_demand AS 
+    SELECT 
+        asin,
+        ship_state_or_territory,
+        mode() WITHIN GROUP (ORDER BY category) AS category,
+        COUNT(*) as regional_orders,
+        ROW_NUMBER() OVER (PARTITION BY asin ORDER BY COUNT(*) DESC) as rank
+    FROM amazon_orders
+    WHERE status != 'cancelled_or_returned'
+    GROUP BY asin, ship_state_or_territory
+    ORDER BY regional_orders DESC;
+
+ SELECT * FROM regional_item_demand LIMIT 10;
+
+    asin    | ship_state_or_territory |   category    | regional_orders | rank
+------------+-------------------------+---------------+-----------------+------
+ B09SDXFFQ1 | karnataka               | western dress |             124 |    1
+ B09SDY8DCT | kerala                  | western dress |             114 |    1
+ B09SDXFFQ1 | maharashtra             | western dress |             112 |    2
+ B09SDXFFQ1 | kerala                  | western dress |             102 |    3
+ B08XNJG8B1 | maharashtra             | set           |              95 |    1
+ B09SDYQ3WG | kerala                  | western dress |              94 |    1
+ B09SDY4VDC | maharashtra             | western dress |              93 |    1
+ B08XQ98B2Q | maharashtra             | set           |              91 |    1
+ B081WX4G4Q | maharashtra             | kurta         |              89 |    1
+ B09SDYQ3WG | maharashtra             | western dress |              88 |    2
+(10 rows)
+
+CREATE VIEW regional_cancelled AS 
+    SELECT 
+        asin,
+        ship_state_or_territory,
+        COUNT(*) as regional_orders,
+        ROW_NUMBER() OVER (PARTITION BY asin ORDER BY COUNT(*) DESC) as rank
+    FROM amazon_orders
+    WHERE status = 'cancelled or returned'
+    GROUP BY asin, ship_state_or_territory
+    ORDER BY regional_orders DESC;
+
+ SELECT * FROM regional_cancelled LIMIT 10;
+
+     asin    | ship_state_or_territory | regional_orders | rank
+------------+-------------------------+-----------------+------
+ B09SDXFFQ1 | kerala                  |              28 |    1
+ B09SDY8DCT | kerala                  |              28 |    1
+ B0894X27FC | uttar pradesh           |              26 |    1
+ B09SDXFFQ1 | telangana               |              23 |    2
+ B099NR7612 | tamil nadu              |              22 |    1
+ B08B3Z2YY3 | uttar pradesh           |              21 |    1
+ B09SDXRYBG | maharashtra             |              21 |    1
+ B09SDXFFQ1 | karnataka               |              20 |    3
+ B09SDXFFQ1 | maharashtra             |              20 |    4
+ B09NQ4NM75 | karnataka               |              20 |    1
+(10 rows)
+
+
+
+-- 2: time series revenue analysis
+CREATE VIEW weekly_revenue_series AS
+    WITH week_bounds AS (
+        SELECT 
+            date_trunc('week', MIN(date)) as start_week,
+            date_trunc('week', MAX(date)) as end_week
+        FROM amazon_orders
+    ),
+    weekly_metrics AS (
+        SELECT 
+            date_trunc('week', date)::date as week_start,
+            COUNT(DISTINCT order_id) as total_orders,
+            SUM(quantity) as units_sold,
+            ROUND(SUM(amount)) as revenue,
+            COUNT(DISTINCT asin) as unique_items,
+            SUM(CASE WHEN promotion_ids = TRUE THEN 1 ELSE 0 END) as orders_at_discount
+        FROM amazon_orders
+        WHERE status != 'cancelled or returned'
+        GROUP BY date_trunc('week', date)
+    ),
+    growth_calc AS (
+        SELECT 
+            *,
+            LAG(revenue) OVER (ORDER BY week_start) as prev_week_revenue,
+            LAG(total_orders) OVER (ORDER BY week_start) as prev_week_orders,
+            ROW_NUMBER() OVER (ORDER BY revenue DESC) as revenue_rank
+        FROM weekly_metrics
+    )
+SELECT 
+    week_start,
+    total_orders,
+    units_sold,
+    orders_at_discount,
+    ROUND((revenue::numeric / total_orders)) as avg_order_value,
+    revenue,
+    ROUND(((revenue::numeric - prev_week_revenue) / prev_week_revenue * 100)) as revenue_growth_pct
+FROM growth_calc
+ORDER BY week_start;
+
+
+SELECT * FROM weekly_revenue_series;
+
+ week_start | total_orders | units_sold | orders_at_discount | avg_order_value | revenue | revenue_growth_pct
+------------+--------------+------------+--------------------+-----------------+---------+--------------------
+ 2022-03-28 |         3781 |       4090 |               2924 |             698 | 2640144 |
+ 2022-04-04 |         8873 |       9537 |               6660 |             688 | 6105367 |                131
+ 2022-04-11 |         9063 |       9723 |               7005 |             686 | 6213862 |                  2
+ 2022-04-18 |         9459 |      10192 |               7581 |             681 | 6437191 |                  4
+ 2022-04-25 |         8618 |       9267 |               6861 |             687 | 5924302 |                 -8
+ 2022-05-02 |         9380 |      10089 |               7179 |             703 | 6594974 |                 11
+ 2022-05-09 |         6546 |       7049 |               5360 |             733 | 4798796 |                -27
+ 2022-05-16 |         6471 |       6927 |               5307 |             734 | 4751941 |                 -1
+ 2022-05-23 |         7065 |       7591 |               5127 |             735 | 5194428 |                  9
+ 2022-05-30 |         7792 |       8375 |               5435 |             729 | 5680462 |                  9
+ 2022-06-06 |         8198 |       8828 |               5864 |             724 | 5936593 |                  5
+ 2022-06-13 |         6916 |       7418 |               5128 |             733 | 5070166 |                -15
+ 2022-06-20 |         6393 |       6892 |               4966 |             722 | 4613210 |                 -9
+ 2022-06-27 |         1661 |       1767 |               1164 |             744 | 1235472 |                -73
+(14 rows)
+
+           
+-- 3: analysis by location
+CREATE OR REPLACE VIEW regional_sales AS 
+SELECT 
+    ship_state_or_territory,
+    COUNT(*) as total_orders,
+    SUM(CASE 
+        WHEN status = 'cancelled or returned' THEN 1 
+        ELSE 0 
+    END) as cancelled_orders,
+    SUM(CASE 
+        WHEN status != 'cancelled or returned' THEN 1 
+        ELSE 0 
+    END) as completed_orders,
+    COUNT(DISTINCT order_id) as unique_orders,
+    SUM(CASE 
+        WHEN status != 'cancelled or returned' THEN quantity 
+        ELSE 0 
+    END) as units_sold
+FROM amazon_orders
+GROUP BY ship_state_or_territory
+ORDER BY total_orders DESC;
+
+SELECT * FROM regional_sales LIMIT 15;
+
+ ship_state_or_territory | total_orders | cancelled_orders | completed_orders | unique_orders | units_sold
+-------------------------+--------------+------------------+------------------+---------------+------------
+ maharashtra             |        22251 |             3419 |            18832 |         20774 |      18880
+ karnataka               |        17316 |             2576 |            14740 |         16173 |      14792
+ tamil nadu              |        11478 |             1837 |             9641 |         10515 |       9699
+ telangana               |        11324 |             1883 |             9441 |         10399 |       9481
+ uttar pradesh           |        10633 |             1923 |             8710 |         10058 |       8746
+ delhi                   |         7045 |             1075 |             5970 |          6606 |       5981
+ kerala                  |         6583 |             1299 |             5284 |          6105 |       5300
+ west bengal             |         5960 |             1053 |             4907 |          5651 |       4923
+ andhra pradesh          |         5427 |             1034 |             4393 |          4977 |       4414
+ gujarat                 |         4476 |              785 |             3691 |          4157 |       3699
+ haryana                 |         4414 |              654 |             3760 |          4142 |       3772
+ rajasthan               |         2716 |              450 |             2266 |          2510 |       2272
+ madhya pradesh          |         2527 |              436 |             2091 |          2373 |       2093
+ odisha                  |         2139 |              424 |             1715 |          2024 |       1721
+ bihar                   |         2112 |              424 |             1688 |          2015 |       1695
+(15 rows)
+
+
+-- Feature extraction complete. Export to csv
+-- Export to CSV with headers, using Windows path formatting
+\copy amazon_orders TO 'data/amazon_orders_cleaned.csv' CSV HEADER;
+\copy (SELECT * FROM total_item_sales) TO 'data/cleaned_data/total_item_sales.csv' CSV HEADER;
+\copy (SELECT * FROM cancelled_total_item_sales) TO 'data/cleaned_data/cancelled_total_item_sales.csv' CSV HEADER;
+\copy (SELECT * FROM regional_item_demand) TO 'data/cleaned_data/regional_item_demand.csv' CSV HEADER;
+\copy (SELECT * FROM regional_cancelled) TO 'data/cleaned_data/regional_item_cancelled.csv' CSV HEADER;
+\copy (SELECT * FROM weekly_revenue_series ORDER BY week_start) TO 'data/cleaned_data/weekly_revenue_series.csv' CSV HEADER;
+\copy (SELECT * FROM regional_sales ORDER BY total_orders DESC) TO 'data/cleaned_data/regional_sales.csv' CSV HEADER;
