@@ -4,6 +4,8 @@ Cleaning, analysis and visualization of Amazon sales data to evaluate product pe
 
 
 #### Tree Directory 
+
+```
 Amazon_ECommerce_Analysis/
 ├───data
 │   ├───processed
@@ -14,20 +16,6 @@ Amazon_ECommerce_Analysis/
 │   ├───models
 │   └───tables
 └───src
-
-#### Installation and running code
-
-Run 
-'''
-pandas_cleaning.py
-'''
-
-This will process amazon_sales_report.csv from raw folder and output amazon_sales_pdcleaned.csv in processed folder
-
-Run 
-'''
-pandas_cleaning.py
-'''
-
+```
 #### License
 MIT license
