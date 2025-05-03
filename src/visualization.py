@@ -123,6 +123,7 @@ g.fig.suptitle('Price Distribution by Category', y=1.02)
 g.set_titles("{col_name}")
 g.set_axis_labels("Median Unit Price", "Count")
 plt.tight_layout()
+plt.title('Price Distribution by Category')
 plt.savefig(project_root + '/outputs/figures/price_distribution.png', dpi=300, facecolor='white')
 plt.close()
 
@@ -258,6 +259,7 @@ g = sns.displot(
 g.fig.suptitle('Price Distribution by Category', y=1.02)
 g.set_titles("{col_name}")
 g.set_axis_labels("Median Unit Price", "Count")
+plt.title('Topsellers Price Distribution by Category')
 plt.tight_layout()
 plt.savefig(project_root + '/outputs/figures/topseller_price_distribution.png', dpi=300, facecolor='white')
 plt.close()
@@ -341,6 +343,7 @@ for cat in ['sales_channel', 'fulfillment', 'ship_service_level', 'category', 's
 # Plot order total amount distributions by status
 sns.kdeplot(dataframes['orders'], x='amount', hue='status', fill=True, multiple='stack')
 plt.xlabel('Order Total Amount')
+plt.title('Order Total Amount Distribution by Status')
 plt.savefig(project_root + '/outputs/figures/order_total_amount_distribution.png', dpi=300, facecolor='white', bbox_inches='tight')
 plt.close()
 
@@ -374,6 +377,7 @@ plt.close()
 dataframes['orders']['date'] = pd.to_datetime(dataframes['orders']['date'])
 plt.figure(figsize=(12, 5))
 sns.kdeplot(data=dataframes['orders'], x='date', hue='status', fill=True, multiple='stack', palette='rocket')
+plt.title('Shipment Status Over Time')
 plt.savefig(project_root + '/outputs/figures/shipment_status_time_analysis.png', dpi=300, facecolor='white')
 plt.close()
 
@@ -382,14 +386,14 @@ plt.close()
 top_regions = dataframes['regional_sales'].head(10)['ship_state_or_territory'].tolist()
 dataframes['regional_demand'] = dataframes['regional_demand'].replace({'category': 'dupatta'}, {'category': 'ethnic dress'})
 top_regions_item_sales = dataframes['regional_demand'][dataframes['regional_demand']['ship_state_or_territory'].isin(top_regions)]
-top_regions_item_sales.to_csv(os.path.join(project_root, 'outputs', 'tables', 'top_regions_item_sales.csv'), index=False)
+top_regions_item_sales.to_csv(os.path.join(project_root, 'data', 'processed', 'top_regions_item_sales.csv'), index=False)
 
 
 # Sum orders by region and category and export as CSV
-region_top_categories = top_regions_item_sales.groupby(['ship_state_or_territory', 'category']).agg({'regional_orders': 'sum'}).reset_index()
-region_top_categories.sort_values(by=['ship_state_or_territory', 'regional_orders'], ascending=False, inplace=True)
-region_top_categories.reset_index(drop=True, inplace=True)
-region_top_categories.to_csv(os.path.join(project_root, 'outputs', 'tables', 'region_top_categories.csv'), index=False)
+regional_top_categories = top_regions_item_sales.groupby(['ship_state_or_territory', 'category']).agg({'regional_orders': 'sum'}).reset_index()
+regional_top_categories.sort_values(by=['ship_state_or_territory', 'regional_orders'], ascending=False, inplace=True)
+regional_top_categories.reset_index(drop=True, inplace=True)
+regional_top_categories.to_csv(os.path.join(project_root, 'outputs', 'tables', 'region_top_categories.csv'), index=False)
 
 # Plot regional orders by category
 # Pivot data to region vs category and plot
