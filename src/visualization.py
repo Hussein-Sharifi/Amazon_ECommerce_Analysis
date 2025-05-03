@@ -55,7 +55,7 @@ sns.violinplot(data=sales, y='revenue', x='category', hue='category', cut=0, inn
 plt.title('Item Revenue Distribution by Category')
 plt.xticks(rotation=45)
 plt.xlabel('')
-plt.savefig(project_root + '/outputs/figures/item_distributions_by_category.png', dpi=300, facecolor='white')
+plt.savefig(project_root + '/outputs/figures/item_distributions_by_category.png', dpi=300, facecolor='white', bbox_inches='tight')
 plt.close()
 
 
@@ -131,16 +131,16 @@ plt.close()
 plt.subplots(1,2, figsize=(12, 5))
 plt.subplot(1, 2, 1)
 sns.violinplot(data=topsellers, y='total_orders', x='category', hue='category', cut=0, inner='box', palette='Paired')
-plt.title('Item Order Count Distribution by Category')
+plt.title('Topsellers Item Order Count Distribution by Category')
 plt.xticks(rotation=45)
 plt.xlabel('')
 plt.ylabel('total orders')
 plt.subplot(1, 2, 2)
 sns.violinplot(data=topsellers, y='revenue', x='category', hue='category', cut=0, inner='box', palette='Paired')
-plt.title('Item Revenue Distribution by Category')
+plt.title('Topsellers Item Revenue Distribution by Category')
 plt.xticks(rotation=45)
 plt.xlabel('')
-plt.savefig(project_root + '/outputs/figures/topseller_distributions_by_category.png', dpi=300, facecolor='white')
+plt.savefig(project_root + '/outputs/figures/topseller_distributions_by_category.png', dpi=300, facecolor='white', bbox_inches='tight')
 plt.close()
 
 
