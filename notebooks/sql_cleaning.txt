@@ -1,4 +1,3 @@
-
 -- create table and import csv file
 CREATE TABLE amazon_orders (
     index_id                        SERIAL PRIMARY KEY,
@@ -25,8 +24,7 @@ CREATE TABLE amazon_orders (
 );
 
 
-\copy amazon_orders FROM 'data\amazon_sales_cleaned_20250327_154950.csv"' DELIMITER ',' CSV HEADER;
-
+\copy amazon_orders FROM 'data\processed\amazon_sales_pdcleaned.csv"' DELIMITER ',' CSV HEADER;
 
 -- determine if payment information can be recovered. start with quantity.
 -- already know quantity is not null. check if any orders are missing both quantity and amount information:
@@ -673,10 +671,10 @@ SELECT * FROM regional_sales LIMIT 15;
 
 -- Feature extraction complete. Export to csv
 -- Export to CSV with headers, using Windows path formatting
-\copy amazon_orders TO 'data/amazon_orders_cleaned.csv' CSV HEADER;
-\copy (SELECT * FROM total_item_sales) TO 'data/cleaned_data/total_item_sales.csv' CSV HEADER;
-\copy (SELECT * FROM cancelled_total_item_sales) TO 'data/cleaned_data/cancelled_total_item_sales.csv' CSV HEADER;
-\copy (SELECT * FROM regional_item_demand) TO 'data/cleaned_data/regional_item_demand.csv' CSV HEADER;
-\copy (SELECT * FROM regional_cancelled) TO 'data/cleaned_data/regional_item_cancelled.csv' CSV HEADER;
-\copy (SELECT * FROM weekly_revenue_series ORDER BY week_start) TO 'data/cleaned_data/weekly_revenue_series.csv' CSV HEADER;
-\copy (SELECT * FROM regional_sales ORDER BY total_orders DESC) TO 'data/cleaned_data/regional_sales.csv' CSV HEADER;
+\copy amazon_orders TO 'data/processed/amazon_orders_cleaned.csv' CSV HEADER;
+\copy (SELECT * FROM total_item_sales) TO 'data/processed/total_item_sales.csv' CSV HEADER;
+\copy (SELECT * FROM cancelled_total_item_sales) TO 'data/processed/cancelled_total_item_sales.csv' CSV HEADER;
+\copy (SELECT * FROM regional_item_demand) TO 'data/processed/regional_item_demand.csv' CSV HEADER;
+\copy (SELECT * FROM regional_cancelled) TO 'data/processed/regional_item_cancelled.csv' CSV HEADER;
+\copy (SELECT * FROM weekly_revenue_series ORDER BY week_start) TO 'data/processed/weekly_revenue_series.csv' CSV HEADER;
+\copy (SELECT * FROM regional_sales ORDER BY total_orders DESC) TO 'data/processed/regional_sales.csv' CSV HEADER;
