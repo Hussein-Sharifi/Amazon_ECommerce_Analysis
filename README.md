@@ -1,6 +1,6 @@
 # Amazon E-Commerce Analysis
 
-(In Progress)
+(In Progress)  
 Cleaning, analysis and visualization of Amazon sales data to evaluate product performance, cancellation patterns, regional demand, and revenue.
 
 
