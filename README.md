@@ -1,9 +1,10 @@
 # Amazon E-Commerce Analysis
 
+(In Progress)
 Cleaning, analysis and visualization of Amazon sales data to evaluate product performance, cancellation patterns, regional demand, and revenue.
 
 
-#### Tree Directory 
+### Tree Directory 
 
 ```
 Amazon_ECommerce_Analysis/
@@ -17,5 +18,7 @@ Amazon_ECommerce_Analysis/
 │   └───tables
 └───src
 ```
-#### License
+
+
+### License
 MIT license

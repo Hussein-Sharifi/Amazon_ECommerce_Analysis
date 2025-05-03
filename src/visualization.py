@@ -28,7 +28,7 @@ dataframes['sales']['category'].value_counts().plot(kind='barh')
 plt.xlabel('Number of items')
 plt.ylabel('')
 plt.title('Number of Items By Category')
-plt.savefig(project_root + '/outputs/figures/item_count_by_category.png', dpi=300, facecolor='white')
+plt.savefig(project_root + '/outputs/figures/item_count_by_category.png', dpi=300, facecolor='white', bbox_inches='tight')
 plt.close()
 
 # Split topsellers from sales
@@ -121,6 +121,8 @@ g.fig.suptitle('Price Distribution by Category', y=1.02)
 g.set_titles("{col_name}")
 g.set_axis_labels("Median Unit Price", "Count")
 plt.tight_layout()
+plt.savefig(project_root + '/outputs/figures/price_distribution.png', dpi=300, facecolor='white')
+plt.close()
 
 
 # Plot item order and revenue distributions by category
@@ -328,7 +330,8 @@ for cat in ['sales_channel', 'fulfillment', 'ship_service_level', 'category', 's
     plt.savefig(
         os.path.join(project_root, 'outputs', 'figures', f'cancellation_percentage_by_{cat}.png'), 
         dpi=300, 
-        facecolor='white'
+        facecolor='white',
+        bbox_inches='tight'
     )
     plt.close()
 
@@ -336,7 +339,7 @@ for cat in ['sales_channel', 'fulfillment', 'ship_service_level', 'category', 's
 # Plot order total amount distributions by status
 sns.kdeplot(dataframes['orders'], x='amount', hue='status', fill=True, multiple='stack')
 plt.xlabel('Order Total Amount')
-plt.savefig(project_root + '/outputs/figures/order_total_amount_distribution.png', dpi=300, facecolor='white')
+plt.savefig(project_root + '/outputs/figures/order_total_amount_distribution.png', dpi=300, facecolor='white', bbox_inches='tight')
 plt.close()
 
 
