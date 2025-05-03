@@ -70,6 +70,8 @@ sns.barplot(data=sales, x='total_orders', y='category', hue='category', estimato
 plt.title('Mean Item Order Count')
 plt.ylabel('')
 plt.tight_layout()
+plt.savefig(project_root + '/outputs/figures/order_count_skewness.png', dpi=300, facecolor='white')
+
 # Plot median and mean item revenue
 plt.subplot(1, 2, 1)
 sns.barplot(data=sales, x='revenue', y='category', hue='category', estimator=np.median)
@@ -81,7 +83,7 @@ sns.barplot(data=sales, x='revenue', y='category', hue='category', estimator=np.
 plt.title('Mean Item Revenue')
 plt.ylabel('')
 plt.tight_layout()
-plt.savefig(project_root + '/outputs/figures/data_skewness.png', dpi=300, facecolor='white')
+plt.savefig(project_root + '/outputs/figures/revenue_skewness.png', dpi=300, facecolor='white')
 plt.close()
 
 
