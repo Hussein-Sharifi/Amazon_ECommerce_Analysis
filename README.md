@@ -252,7 +252,7 @@ Let's look at percentages so we can cross-reference demand levels more easily
 
 Let's look at cancellation patterns by region and order density. Darker colors correspond to higher order density
 
-![Cancellation Percentage by State](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_state.png
+![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_state.png
  "Cancellation Percentage by State")
 
 - Top states have similar cancellation percentage of about 15%
@@ -260,7 +260,7 @@ Let's look at cancellation patterns by region and order density. Darker colors c
 
 Zoom in on top 10 states/territories to see if any states have high cancellation rate.
 
-![Cancellation Percentage by State Top 10](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_rate_heatmap.png
+![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_rate_heatmap.png
  "Cancellation Percentage by State Top 10")
 
 - Kerala has high cancellation rates
@@ -269,7 +269,7 @@ Zoom in on top 10 states/territories to see if any states have high cancellation
 
 It seems worthwhile to highlight deviations in cancellation rates for top 10 states by category
 
-![Cancellation Percentage Deviations](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_rate_deviation.png
+![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_rate_deviation.png
  "Cancellation Percentage Deviations")
 
 - Note that Maharashtra has low cancellation rate for western dress.
