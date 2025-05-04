@@ -146,7 +146,7 @@ Like before, we will examine item pricing by category in both a stacked and indi
 ![Top Sellers Pricing](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/topseller_price_distribution.png
  "Top Sellers Pricing")
 
-- Note that regular selling items order density was dominated by kurta items, whereas top sellers' order density is dominated by sets. Again, reflecting that consumers are willing to pay higher prices for set items. 
+- Note that regular selling items order density was dominated by kurta items, whereas top sellers' order density is dominated by sets. 
 - Recall the two distribution peaks likely represent high vs low quality items. Set top sellers have a larger "high quality item" volume relative to regular selling items.
 - Western dress top sellers have higher "low quality item" volume relative to regular selling items.
 
