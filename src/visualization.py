@@ -123,7 +123,6 @@ g.fig.suptitle('Price Distribution by Category', y=1.02)
 g.set_titles("{col_name}")
 g.set_axis_labels("Median Unit Price", "Count")
 plt.tight_layout()
-plt.title('Price Distribution by Category')
 plt.savefig(project_root + '/outputs/figures/price_distribution.png', dpi=300, facecolor='white')
 plt.close()
 
@@ -256,10 +255,9 @@ g = sns.displot(
     legend=False,
     facet_kws={'sharex': False, 'sharey': False}
 )
-g.fig.suptitle('Price Distribution by Category', y=1.02)
+g.fig.suptitle('Topsellers Price Distribution by Category', y=1.02)
 g.set_titles("{col_name}")
 g.set_axis_labels("Median Unit Price", "Count")
-plt.title('Topsellers Price Distribution by Category')
 plt.tight_layout()
 plt.savefig(project_root + '/outputs/figures/topseller_price_distribution.png', dpi=300, facecolor='white')
 plt.close()
@@ -393,11 +391,11 @@ top_regions_item_sales.to_csv(os.path.join(project_root, 'data', 'processed', 't
 regional_top_categories = top_regions_item_sales.groupby(['ship_state_or_territory', 'category']).agg({'regional_orders': 'sum'}).reset_index()
 regional_top_categories.sort_values(by=['ship_state_or_territory', 'regional_orders'], ascending=False, inplace=True)
 regional_top_categories.reset_index(drop=True, inplace=True)
-regional_top_categories.to_csv(os.path.join(project_root, 'outputs', 'tables', 'region_top_categories.csv'), index=False)
+regional_top_categories.to_csv(os.path.join(project_root, 'outputs', 'tables', 'regional_top_categories.csv'), index=False)
 
 # Plot regional orders by category
 # Pivot data to region vs category and plot
-pivot = region_top_categories.pivot_table(
+pivot = regional_top_categories.pivot_table(
     index='ship_state_or_territory',
     columns='category',
     values='regional_orders'

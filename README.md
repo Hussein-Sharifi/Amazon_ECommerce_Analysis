@@ -71,7 +71,7 @@ Kurtas, sets, blouses, and tops have a pronounced right skew. Note this is botto
 
 
 #### Price Distributions
-Next, let's look at price distributions. We will look at median price for each item. What are consumers willing to pay per category? We will also look at percentage of purchases that are discounted.
+Next, let's look at price distributions per category both stacked and individually. Item pricing is given by median order price. What are consumers willing to pay per category? We will also look at percentage of purchases that are discounted.
 
 ![Order Density and Discount Percentage](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/order_density_and_discount.png "Order Density and Discount Percentage")
 
@@ -117,7 +117,7 @@ Example:
  "Top 20 Kurta Products")
 
 - Kurta top sellers are significantly less discounted. Consumers are willing to pay full price given the right item.
-- Top three products are body fitting red dresses with geometric design. Again, a simple pattern appealing to a broad market. These dresses are more appropriate for special occasions, which explains consumers' willingness to pay higher prices.
+- Top three products are body fitting red dresses with geometric design. Again, a simple pattern appealing to a broad market. These dresses are more appropriate for going out, which explains consumers' willingness to pay higher prices.
 
 Example:
 [Top Kurta Item](https://m.media-amazon.com/images/I/81BLgL+FteL._AC_SY741_.jpg "Top Kurta Item")
@@ -130,11 +130,159 @@ Example:
  "Top 20 Set Products")
 
 - Set top sellers are also significantly less discounted than western dresses, but more so than kurtas.
-- Top three products have darker color and complex geometric design. Likely reflects consumers' willingness to pay higher prices for set items.
+- Top three products have darker color and complex geometric design. These dresses are more appropriate for going out, which explains consumers' willingness to pay higher prices.
+
 
 Example:
 [Top Set Item](https://m.media-amazon.com/images/I/91ktsnyWQ8L._AC_SY606_.jpg "Top Set Item")
+  
+  
+#### Top Sellers Price Distributions
+Like before, we will examine item pricing by category in both a stacked and individual format, along with discounting percentages. Recall item pricing is given by median order price. 
 
+![Top Sellers Distributions](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/topseller_order_density_and_discount.png
+ "Top Sellers Distributions")
+
+![Top Sellers Pricing](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/topseller_price_distribution.png
+ "Top Sellers Pricing")
+
+- Note that regular selling items order density was dominated by kurta items, whereas top sellers' order density is dominated by sets. Again, reflecting that consumers are willing to pay higher prices for set items. 
+- Recall the two distribution peaks likely represent high vs low quality items. Set top sellers have a larger "high quality item" volume relative to regular selling items.
+- Western dress top sellers have higher "low quality item" volume relative to regular selling items.
+
+### Sales' Aggregates
+To finish off sales analysis, we will look at sales' aggregates of top sellers and regular sellers side-by-side.
+
+![Sales' Aggregates](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/sales_aggregates.png
+ "Sales' Aggregates")
+
+- Most revenue and order count is concentrated in top selling items, despite representing only 20% of total items.
+- For regular selling items, kurta category has the highest order count and is about half the number of orders in the top selling kurta category. This can't be explained by price levels because the price distributions do not significantly differ between top and regular selling kurtas. This may indicate there is demand for variety in this category since less demand is concentrated in top selling items.
+
+## Cancellation Pattern Analysis
+
+We will start by looking at relative cancellation percentages against each categorical feature. It is important to note here that, due to poor data collection, we will not be able to meaningfully distinguish between cancelled and returned orders. This is due to the fact that a large proportion of returned orders were labelled by shipping services as cancelled. The main drawback here is that we won't be able to analyze return shipping costs. 
+
+From here on, I will refer to both as "cancelled" orders to avoid redundancy. Let's look at cancellations against shipping service level.
+
+![Ship Service Level vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_ship_service_level.png
+ "Ship Service Level vs Cancellation")
+
+- As expected, expedited shipping predicts fewer cancellations. Surprisingly, orders with expedited shipping are still cancelled 13.4% of the time. Orders with standard shipping are about 1.78x more likely to be cancelled.
+
+
+Next, shipping fulfillment service vs cancellations.
+
+![Fulfillment Service vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_fulfillment.png
+ "Fulfillment Service vs Cancellation")
+
+- Easy Ship has higher cancellation rates. It would be worthwhile to investigate if this shipping service is correlated with higher wait times or damaged items.
+
+
+Sales channel vs cancellations.
+
+![Sales Channel vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_sales_channel.png
+ "Sales Channel vs Cancellation")
+
+- Non-amazon sales channel has 100% cancellation rate. These orders are likely fraudulent.
+
+
+Sales channel vs cancellations.
+
+![Sales Channel vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_sales_channel.png
+ "Sales Channel vs Cancellation")
+
+- Non-amazon sales channel has 100% cancellation rate. These orders are likely fraudulent.
+
+
+Category vs cancellations.
+
+![Category vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_category.png
+ "Category vs Cancellation")
+
+- Of the three predominant categories, kurtas have lowest cancellation rate. But all three are comparable.
+- Cancellation percentages closely follow order patterns. This is likely because items with higher demands are more scrutinized by buyers. 
+
+
+Cancellation rate of business-to-business vs business-to-customer transactions
+
+![B2B vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_b2b.png
+ "B2B vs Cancellation")
+
+- As expected, B2B transactions have lower cancellation rate.
+
+
+Item size vs cancellation rate
+
+![Size vs Cancellation](https://github.com/Hussein-https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_size.png
+ "Size vs Cancellation")
+
+- Smaller sizing correlates with higher cancellation percentages in a semi linear fashion. This is likely due to vanity sizing choices by consumers.
+
+
+Is there a relationship between order amount or quantity and cancellation rate?
+
+![Amount and Quantity vs Cancellation](https://github.com/Hussein-https://github.com/Hussein-https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv
+ "Amount and Quantity vs Cancellation")
+
+- No correlation between these variables
+
+
+#### Regional Analysis
+
+Top 10 regions by order count:
+
+![Amount and Quantity vs Cancellation](https://github.com/Hussein-https://github.com/Hussein-https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv
+ "Amount and Quantity vs Cancellation")
+
+
+Which categories are in highest demand in top 10 regions?
+
+
+![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/regional_orders_by_category.png
+ "Category Demand by Region")
+
+Top states' top categories:
+- Note top 2 states have even split between sets and kurtas
+- Significant preference for kurtas in Tamil Nadu
+- Significant preference for sets in Uttar Pradesh and Delhi
+
+
+Let's look at percentages so we can cross-reference demand levels more easily
+
+
+![Category Demand Percentage by Region](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/regional_orders_by_category.png
+ "Category Demand Percentage by Region")
+
+
+- Largely similar demand levels to global data patterns. We can cross reference this list for ad targeting. 
+
+
+#### Regional Cancellation Patterns
+
+Let's look at cancellation patterns by region and order density. Darker colors correspond to higher order density
+
+![Cancellation Percentage by State](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_state.png
+ "Cancellation Percentage by State")
+
+- Top states have similar cancellation percentage of about 15%
+- 33 orders with unknown address have unusually high cancellation rate. Error or evidence of fraudulent orders?
+
+Zoom in on top 10 states/territories to see if any states have high cancellation rate.
+
+![Cancellation Percentage by State Top 10](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_rate_heatmap.png
+ "Cancellation Percentage by State Top 10")
+
+- Kerala has high cancellation rates
+- Uttar Pradesh and Andhra Pradesh have high western dress cancellation rates
+
+
+It seems worthwhile to highlight deviations in cancellation rates for top 10 states by category
+
+![Cancellation Percentage Deviations](![Category Demand by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_rate_deviation.png
+ "Cancellation Percentage Deviations")
+
+- Note that Maharashtra has low cancellation rate for western dress.
 
 
 ### License
