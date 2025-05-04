@@ -206,7 +206,7 @@ Cancellation rate of business-to-business vs business-to-customer transactions
 
 Item size vs cancellation rate
 
-![Size vs Cancellation](https://github.com/Hussein-https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_size.png
+![Size vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_size.png
  "Size vs Cancellation")
 
 - Smaller sizing correlates with higher cancellation percentages in a semi linear fashion. This is likely due to vanity sizing choices by consumers.
@@ -214,7 +214,7 @@ Item size vs cancellation rate
 
 Is there a relationship between order amount or quantity and cancellation rate?
 
-![Amount and Quantity vs Cancellation](https://github.com/Hussein-https://github.com/Hussein-https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv
+![Amount and Quantity vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv
  "Amount and Quantity vs Cancellation")
 
 - No correlation between these variables
@@ -224,8 +224,8 @@ Is there a relationship between order amount or quantity and cancellation rate?
 
 Top 10 regions by order count:
 
-![Amount and Quantity vs Cancellation](https://github.com/Hussein-https://github.com/Hussein-https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv
- "Amount and Quantity vs Cancellation")
+![Top Ten Regions](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/regional_top_categories.csv
+ "Top Ten Regions")
 
 
 Which categories are in highest demand in top 10 regions?
