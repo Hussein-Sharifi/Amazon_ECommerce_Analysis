@@ -214,8 +214,7 @@ Item size vs cancellation rate
 
 Is there a relationship between order amount or quantity and cancellation rate?
 
-![Amount and Quantity vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv
- "Amount and Quantity vs Cancellation")
+[Correlation Matrix](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv)
 
 - No correlation between these variables
 
@@ -224,8 +223,7 @@ Is there a relationship between order amount or quantity and cancellation rate?
 
 Top 10 regions by order count:
 
-![Top Ten Regions](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/regional_top_categories.csv
- "Top Ten Regions")
+[Top Ten Regions](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/regional_top_categories.csv)
 
 
 Which categories are in highest demand in top 10 regions?
