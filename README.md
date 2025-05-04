@@ -241,7 +241,7 @@ Top states' top categories:
 Let's look at percentages so we can cross-reference demand levels more easily
 
 
-![Category Demand Percentage by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/regional_orders_by_category.png
+![Category Demand Percentage by Region](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/regional_order_percentages_by_category.png
  "Category Demand Percentage by Region")
 
 
