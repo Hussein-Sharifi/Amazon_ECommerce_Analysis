@@ -187,14 +187,6 @@ Sales channel vs cancellations.
 - Non-amazon sales channel has 100% cancellation rate. These orders are likely fraudulent.
 
 
-Sales channel vs cancellations.
-
-![Sales Channel vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_sales_channel.png
- "Sales Channel vs Cancellation")
-
-- Non-amazon sales channel has 100% cancellation rate. These orders are likely fraudulent.
-
-
 Category vs cancellations.
 
 ![Category vs Cancellation](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/cancellation_percentage_by_category.png
