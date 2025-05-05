@@ -1,6 +1,6 @@
 # Amazon E-Commerce Analysis
 
-Cleaning, analysis and visualization of Amazon sales data to evaluate product performance, cancellation patterns, regional demand, and revenue.
+Cleaning, analysis and visualization of Amazon sales data to evaluate product performance, cancellation patterns, and regional demand.
 
 - Timeframe: between March 31st, 2022 and June 29th, 2022
 - Country: India
@@ -15,9 +15,8 @@ Amazon_ECommerce_Analysis/
 ├───notebooks
 ├───outputs
 │   ├───figures
-│   ├───models
 │   └───tables
-└───scripts
+└───src
 ```
 
 ## Data Preprocessing
@@ -274,6 +273,10 @@ It seems worthwhile to highlight deviations in cancellation rates for top 10 sta
 
 - Note that Maharashtra has low cancellation rate for western dress.
 
+
+#### Revenue
+
+Finally, we will finish our analysis by looking at revenue. 
 
 ### License
 MIT license
