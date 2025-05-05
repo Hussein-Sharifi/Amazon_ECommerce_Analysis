@@ -26,8 +26,8 @@ Summary:
 - Normalized columns and values, converted corresponding data types, dropped columns with no info, and reconciled columns with duplicate info.
 - Singled out true duplicate orders vs orders with multiple parts. Dropped true duplicate orders. 
 - Imputed over 30k missing/incorrect values (payment and address info) in SQL through a detailed recovery process by matching orders with same Asin or postal code.
-- Ensured data distributions remained consistent and investigated high variance and outliers.
-- Feature engineering for sales and cancellations analysis, as well as regional demand and revenue.
+- Ensured data distributions remained coherent and investigated high variance and outliers.
+- Feature engineering for sales and cancellations analysis, as well as regional demand.
 
 
 ## Analysis
