@@ -273,10 +273,5 @@ It seems worthwhile to highlight deviations in cancellation rates for top 10 sta
 
 - Note that Maharashtra has low cancellation rate for western dress.
 
-
-#### Revenue
-
-Finally, we will finish our analysis by looking at revenue. 
-
 ### License
 MIT license
