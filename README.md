@@ -31,7 +31,7 @@ Summary:
 
 
 ## Analysis
-Analysis process accessible through notebooks/visualization.ipnyb, or, if you would like to run the analysis code yourself, src/visualization.py.
+Analysis process accessible through notebooks/visualization.ipynb, or, if you would like to run the analysis code yourself, src/visualization.py.
 
 ### Sales Analysis
 
