@@ -52,17 +52,17 @@ Note that, in each category, 50% of regular selling items have less than 7 order
 
 - It is possible that having a large variety of items drives consumers to use Amazon more often, leading to better sales for top 50% items. 
 - The items might be produced in low numbers and sold over long periods of time, which would synergize with the effect above by increasing item variety.
-- It also might indicate that a large variety of vendors are selling through Amazon, regardless of profitability level.
+- It also might indicate that a large variety of vendors are selling through Amazon.
 
 
 #### Skewness
-Let's investigate this effect further by looking at data skewness. We'll obtain a 95% confidence intervals for the mean and median of each category.
+Let's investigate this effect further by comparing medians with means. We'll obtain a 95% confidence intervals for the mean and median of each category.
 
 ![Item Order Count Skewness](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/order_count_skewness.png "Item Order Count Skewness")
 
 ![Item Revenue Skewness](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/revenue_skewness.png "Item Revenue Skewness")
 
-Kurtas, sets, blouses, and tops have a pronounced right skew. Note this is bottom 80% of sales and we are not yet considering top sellers, which would further exaggerate the skew. It would be worthwhile to study this effect in more detail to determine the cause and perform the corresponding cost-benefit analysis.
+Most categories have a significant skew. Note this is bottom 80% of sales and we are not yet considering top sellers, which would further exaggerate the skew. It would be worthwhile to study this effect in more detail to determine the cause and perform the corresponding cost-benefit analysis.
 
 - If consumers are highly selective for these categories, it would be beneficial to increase R&D spending to improve target advertising and understand consumer preferences.
 - If cost of having low-selling items is low and variety drives consumers to use Amazon more frequently, it would be beneficial to test optimal levels of variety and update search results accordingly. For example, display one desirable item for every 4 low-selling items and test whether this increases sales.
@@ -76,14 +76,14 @@ Next, let's look at price distributions per category both stacked and individual
 
 - As seen earlier, vast majority of sales are of kurtas and sets. 
 - Consumers are willing to pay higher prices for sets and western dress.
-- Majority of purchases were discounted. Discounting drives higher sales, and it is beneficial to increase an item's base price then discount to the desirable price. 
+- Majority of purchases were discounted. Likely beneficial to increase an item's base price then discount to desired price.  
 
 
-We will zoom in and look at price distributions of each category separately.
+Let's look at the price distributions of each category separately.
 
 ![Price Distributions](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/figures/price_distribution.png "Price Distributions")
 
-- Note that most categories have two price zones, likely reflecting low vs high quality items. This serves as a pricing guide depending on category and item quality.
+- Note that most categories have two or more price zones, likely reflecting different levels of demand depending on item quality. This serves as a pricing guide depending on category and item quality.
 
 
 ### Top Sellers Analysis 
@@ -129,7 +129,7 @@ Example:
  "Top 20 Set Products")
 
 - Set top sellers are also significantly less discounted than western dresses, but more so than kurtas.
-- Top three products have darker color and complex geometric design. These dresses are more appropriate for going out, which explains consumers' willingness to pay higher prices.
+- Top three products have darker color and complex geometric design. These dresses are more appropriate for special occasions, which explains consumers' willingness to pay even higher prices.
 
 
 Example:
