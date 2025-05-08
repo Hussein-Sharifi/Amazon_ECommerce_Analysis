@@ -64,7 +64,7 @@ Let's investigate this effect further by looking at data skewness. We'll obtain 
 
 Kurtas, sets, blouses, and tops have a pronounced right skew. Note this is bottom 80% of sales and we are not yet considering top sellers, which would further exaggerate the skew. It would be worthwhile to study this effect in more detail to determine the cause and perform the corresponding cost-benefit analysis.
 
-- If consumers are highly selective for these categories, it would be beneficial to increase R&R spending to improve target advertising and understand consumer preferences.
+- If consumers are highly selective for these categories, it would be beneficial to increase R&D spending to improve target advertising and understand consumer preferences.
 - If cost of having low-selling items is low and variety drives consumers to use Amazon more frequently, it would be beneficial to test optimal levels of variety and update search results accordingly. For example, display one desirable item for every 4 low-selling items and test whether this increases sales.
 - If cost is high and the above effect is not substantial enough to offset cost, it would be beneficial to look for features that distinguish high vs low selling items and decrease variety.
 
