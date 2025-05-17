@@ -33,11 +33,13 @@ Summary:
 
 
 ## Analysis
-Analysis process accessible through notebooks/visualization.ipynb. If you would like to run the analysis code yourself, download SQL processed csv files and store in data/processed. Navigate to the project directory in your terminal and run:
+Analysis process accessible through notebooks/visualization.ipynb. If you would like to run the analysis code yourself, navigate to the project directory in your terminal and run:
 
 ```
 python src/visualization.py
 ```
+
+This will regenerate outputs from processed data files. 
 
 ### Sales Analysis
 
