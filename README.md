@@ -33,7 +33,13 @@ Summary:
 
 
 ## Analysis
-Analysis process accessible through notebooks/visualization.ipynb. If you would like to run the analysis code yourself, navigate to the project directory in your terminal and run:
+Analysis process accessible through notebooks/visualization.ipynb. If you would like to run the analysis code yourself, navigate to project directory in your terminal and use pip to install requirements:
+
+```
+pip install -r requirements.txt
+```
+
+Then run:
 
 ```
 python src/visualization.py
