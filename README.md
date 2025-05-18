@@ -7,6 +7,45 @@ Cleaning, analysis and visualization of Amazon sales data to evaluate product pe
 
 ---
 
+## Table of Contents
+
+### 1. Project Structure
+- [Tree Directory](#tree-directory)
+
+### 2. Data Preprocessing
+- [Cleaning Process](#data-preprocessing)
+- [Feature Engineering](#data-preprocessing)
+
+### 3. Analysis
+#### 3.1 Sales Analysis
+- [Inventory](#inventory)
+- [Item Order Count and Revenue](#item-order-count-and-revenue)
+- [Skewness](#skewness)
+- [Price Distributions](#price-distributions)
+
+#### 3.2 Top Sellers Analysis
+- [Western Dress Top Sellers](#western-dress-top-sellers)
+- [Kurta Top Sellers](#kurta-top-sellers)
+- [Set Top Sellers](#set-top-sellers)
+- [Top Sellers Price Distributions](#top-sellers-price-distributions)
+
+#### 3.3 Sales Aggregates
+- [Comparative Analysis](#sales-aggregates)
+
+#### 3.4 Cancellation Patterns
+- [Service Level Analysis](#cancellation-pattern-analysis)
+- [Category Analysis](#cancellation-pattern-analysis)
+- [Size Analysis](#cancellation-pattern-analysis)
+
+#### 3.5 Regional Analysis
+- [Top Categories by Region](#regional-analysis)
+- [Regional Demand Patterns](#regional-analysis)
+- [Regional Cancellation Patterns](#regional-cancellation-patterns)
+
+### 4. [License](#license)
+
+---
+
 ### Tree Directory 
 
 ```
