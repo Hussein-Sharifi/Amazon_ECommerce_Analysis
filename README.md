@@ -46,7 +46,7 @@ Cleaning, analysis and visualization of Amazon sales data to evaluate product pe
 
 ---
 
-### Tree Directory 
+## Tree Directory 
 
 ```
 Amazon_ECommerce_Analysis/
