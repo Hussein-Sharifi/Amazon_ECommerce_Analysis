@@ -9,40 +9,36 @@ Cleaning, analysis and visualization of Amazon sales data to evaluate product pe
 
 ## Table of Contents
 
-### 1. Project Structure
-- [Tree Directory](#tree-directory)
+1. [Tree Directory](#tree-directory)
 
-### 2. Data Preprocessing
-- [Cleaning Process](#data-preprocessing)
-- [Feature Engineering](#data-preprocessing)
+2. [Data Preprocessing](#data-preprocessing)
 
-### 3. Analysis
-#### 3.1 Sales Analysis
-- [Inventory](#inventory)
-- [Item Order Count and Revenue](#item-order-count-and-revenue)
-- [Skewness](#skewness)
-- [Price Distributions](#price-distributions)
+3. Analysis
 
-#### 3.2 Top Sellers Analysis
-- [Western Dress Top Sellers](#western-dress-top-sellers)
-- [Kurta Top Sellers](#kurta-top-sellers)
-- [Set Top Sellers](#set-top-sellers)
-- [Top Sellers Price Distributions](#top-sellers-price-distributions)
+3.1 [Sales Analysis](#sales-analysis)
+- Inventory
+- Item Order Count and Revenue Distributions
+- Skewness
+- Price Distributions
 
-#### 3.3 Sales Aggregates
-- [Comparative Analysis](#sales-aggregates)
+3.2 [Top Sellers Analysis](#top-sellers-analysis)
+- Western Dress Top Sellers
+- Kurta Top Sellers
+- Set Top Sellers
+- Top Sellers Price Distributions
 
-#### 3.4 Cancellation Patterns
-- [Service Level Analysis](#cancellation-pattern-analysis)
-- [Category Analysis](#cancellation-pattern-analysis)
-- [Size Analysis](#cancellation-pattern-analysis)
+3.3 [Sales Aggregates](#sales-aggregates)
 
-#### 3.5 Regional Analysis
-- [Top Categories by Region](#regional-analysis)
-- [Regional Demand Patterns](#regional-analysis)
-- [Regional Cancellation Patterns](#regional-cancellation-patterns)
+3.4 [Cancellation Patterns](#cancellation-pattern-analysis)
+- Cancellation Patterns by Categorical Variables
+- Correlation Matrix
 
-### 4. [License](#license)
+3.5 [Regional Analysis](#regional-analysis)
+- Top Ten Regions by Order Count
+- Regional Demand Patterns
+- Regional Cancellation Patterns
+
+4. [License](#license)
 
 ---
 
@@ -264,11 +260,15 @@ Item size vs cancellation rate
 - Smaller sizing correlates with higher cancellation percentages in a semi linear fashion. This is likely due to vanity sizing choices by consumers.
 
 
-Is there a relationship between order amount or quantity and cancellation rate?
+Is there a relationship between order amount or quantity and cancellation rate? Let's check correlation matrix.
 
-[Correlation Matrix](https://github.com/Hussein-Sharifi/Amazon_ECommerce_Analysis/blob/master/outputs/tables/cancellation_correlation.csv)
+|              | amount | quantity | is_cancelled |
+|--------------|--------|----------|--------------|
+| amount       | 1.0    |          |              |
+| quantity     | 0.1631 | 1.0      |              |
+| is_cancelled | -0.0142| 0.0097   | 1.0          |
 
-- No correlation between these variables
+- No linear correlation between total amount, quantity, and cancellation percentage.
 
 
 #### Regional Analysis
