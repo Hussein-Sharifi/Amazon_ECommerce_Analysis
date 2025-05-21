@@ -15,11 +15,11 @@ Cleaning, analysis and visualization of Amazon sales data to evaluate product pe
 
 #### 3. Analysis
 
-3.1 [Sales Analysis](#sales-analysis)
-3.2 [Top Sellers Analysis](#top-sellers-analysis)
-3.3 [Sales Aggregates](#sales-aggregates)
-3.4 [Cancellation Patterns](#cancellation-pattern-analysis)
-3.5 [Regional Analysis](#regional-analysis)
+3.1 [Sales Analysis](#sales-analysis)  
+3.2 [Top Sellers Analysis](#top-sellers-analysis)  
+3.3 [Sales Aggregates](#sales-aggregates)  
+3.4 [Cancellation Patterns](#cancellation-pattern-analysis)  
+3.5 [Regional Analysis](#regional-analysis)  
 
 #### 4. [License](#license)
 
