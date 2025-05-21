@@ -14,7 +14,6 @@ Cleaning, analysis and visualization of Amazon sales data to evaluate product pe
 #### 2. [Data Preprocessing](#data-preprocessing)
 
 #### 3. [Analysis](#analysis)
-
 3.1 [Sales Analysis](#sales-analysis)  
 3.2 [Top Sellers Analysis](#top-sellers-analysis)  
 3.3 [Sales Aggregates](#sales-aggregates)  
